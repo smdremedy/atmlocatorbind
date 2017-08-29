@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.soldiersofmobile.atmlocator.AddAtmActivity">
+
+
+    <Button
+        android:id="@+id/pick_button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Pick location"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/lat_lng_guide"
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent=".2" />
+
+    <TextView
+        android:id="@+id/lat_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="Latitude:"
+        app:layout_constraintRight_toLeftOf="@id/lat_lng_guide"
+        app:layout_constraintTop_toBottomOf="@id/pick_button" />
+
+    <TextView
+        android:id="@+id/lng_label"
+        android:layout_marginTop="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Longitude:"
+        app:layout_constraintRight_toLeftOf="@id/lat_lng_guide"
+        app:layout_constraintTop_toBottomOf="@id/lat_label" />
+
+    <EditText
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBaseline_toBaselineOf="@id/lat_label"
+        app:layout_constraintLeft_toRightOf="@id/lat_lng_guide"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <EditText
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBaseline_toBaselineOf="@id/lng_label"
+        app:layout_constraintLeft_toRightOf="@id/lat_lng_guide"
+        app:layout_constraintRight_toRightOf="parent" />
+
+</android.support.constraint.ConstraintLayout>
