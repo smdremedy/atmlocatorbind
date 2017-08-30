@@ -8,6 +8,7 @@ import android.databinding.*
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import com.google.android.gms.location.places.Place
 import com.google.android.gms.location.places.ui.PlacePicker
@@ -16,9 +17,10 @@ import com.soldiersofmobile.atmlocator.databinding.ActivityAddAtmBinding
 class AddAtmActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityAddAtmBinding
+    lateinit var adapter: ArrayAdapter<String>
 
-    private val model = AddAtmModel(ObservableDouble(2.0), ObservableDouble(3.5),
-            ObservableField("asdfasdf"))
+    private val model = AddAtmModel(ObservableDouble(0.0), ObservableDouble(0.0),
+            ObservableField(""))
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,6 +28,11 @@ class AddAtmActivity : AppCompatActivity() {
 
         binding.model = model
         binding.presenter = AddAtmPresenter(this, model)
+        adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1,
+                arrayOf("bank1", "bank2"))
+        binding.adapter = adapter
+
+        //binding.bankSpinner.adapter = adapter
 
     }
 
@@ -76,7 +83,7 @@ class AddAtmPresenter(val activity: AddAtmActivity, val model: AddAtmModel) {
             address.set("")
             lat.set(0.0)
             lng.set(0.0)
-            note = "notefromcode"
+            hasNote = false
         }
     }
 }
@@ -86,7 +93,7 @@ data class AddAtmModel(var lat: ObservableDouble,
                        var address: ObservableField<String>) : BaseObservable() {
 
     @Bindable
-    var hasNote: Boolean = true
+    var hasNote: Boolean = false
         set(value) {
             field = value
             notifyPropertyChanged(BR.hasNote)
@@ -95,7 +102,7 @@ data class AddAtmModel(var lat: ObservableDouble,
             }
         }
     @Bindable
-    var note: String = "note"
+    var note: String = ""
         set(value) {
             field = value
             notifyPropertyChanged(BR.note)
