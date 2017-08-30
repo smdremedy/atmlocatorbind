@@ -12,12 +12,16 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import com.google.android.gms.location.places.Place
 import com.google.android.gms.location.places.ui.PlacePicker
+import com.j256.ormlite.dao.Dao
 import com.soldiersofmobile.atmlocator.databinding.ActivityAddAtmBinding
+import com.soldiersofmobile.atmlocator.db.Bank
+import com.soldiersofmobile.atmlocator.db.BankDao
+import com.soldiersofmobile.atmlocator.db.DbHelper
 
 class AddAtmActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityAddAtmBinding
-    lateinit var adapter: ArrayAdapter<String>
+    lateinit var adapter: ArrayAdapter<Bank>
 
     private val model = AddAtmModel(ObservableDouble(0.0), ObservableDouble(0.0),
             ObservableField(""))
@@ -28,11 +32,13 @@ class AddAtmActivity : AppCompatActivity() {
 
         binding.model = model
         binding.presenter = AddAtmPresenter(this, model)
-        adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1,
-                arrayOf("bank1", "bank2"))
+        adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1)
         binding.adapter = adapter
 
-        //binding.bankSpinner.adapter = adapter
+        val dbHelper = DbHelper(this)
+        val bankDao: BankDao = dbHelper.getDao(Bank::class.java)
+
+        adapter.addAll(bankDao.queryForAll())
 
     }
 
@@ -44,7 +50,7 @@ class AddAtmActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if(requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+        if (requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             val place = PlacePicker.getPlace(this, data)
             toast("Picked:$place")
 
