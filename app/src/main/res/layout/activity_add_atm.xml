@@ -27,8 +27,8 @@
             android:id="@+id/pick_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Pick location"
             android:onClick="@{presenter::pick}"
+            android:text="Pick location"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             tools:layout_editor_absoluteY="0dp" />
@@ -41,13 +41,31 @@
             app:layout_constraintGuide_percent=".2" />
 
         <TextView
+            android:id="@+id/bank_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Bank:"
+            app:layout_constraintRight_toLeftOf="@id/lat_lng_guide"
+            app:layout_constraintTop_toBottomOf="@id/pick_button" />
+
+        <Spinner
+            android:id="@+id/bank_spinner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            app:layout_constraintLeft_toRightOf="@id/lat_lng_guide"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/pick_button" />
+
+        <TextView
             android:id="@+id/lat_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="20dp"
             android:text="Latitude:"
             app:layout_constraintRight_toLeftOf="@id/lat_lng_guide"
-            app:layout_constraintTop_toBottomOf="@id/pick_button" />
+            app:layout_constraintTop_toBottomOf="@id/bank_label" />
 
         <TextView
             android:id="@+id/lng_label"
@@ -100,8 +118,8 @@
             android:id="@+id/note_check_box"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Has note"
             android:checked="@={model.hasNote}"
+            android:text="Has note"
             app:layout_constraintTop_toBottomOf="@id/address_edit_text" />
 
         <EditText
@@ -109,8 +127,8 @@
             android:layout_width="0dp"
             android:layout_height="100dp"
             android:inputType="text"
-            android:text="@={model.note}"
             android:maxLines="3"
+            android:text="@={model.note}"
             android:visibility="@{noteCheckBox.checked ? View.VISIBLE : View.GONE}"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"

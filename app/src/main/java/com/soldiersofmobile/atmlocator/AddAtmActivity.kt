@@ -17,13 +17,15 @@ class AddAtmActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityAddAtmBinding
 
+    private val model = AddAtmModel(ObservableDouble(2.0), ObservableDouble(3.5),
+            ObservableField("asdfasdf"))
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_add_atm)
 
-        binding.model = AddAtmModel(ObservableDouble(2.0), ObservableDouble(3.5),
-                ObservableField("asdfasdf"))
-        binding.presenter = AddAtmPresenter(this, binding.model)
+        binding.model = model
+        binding.presenter = AddAtmPresenter(this, model)
 
     }
 
@@ -38,6 +40,13 @@ class AddAtmActivity : AppCompatActivity() {
         if(requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             val place = PlacePicker.getPlace(this, data)
             toast("Picked:$place")
+
+            with(model) {
+                lat.set(place.latLng.latitude)
+                lng.set(place.latLng.longitude)
+                address.set(place.address.toString())
+                note = place.name.toString()
+            }
 
         }
     }
