@@ -10,10 +10,11 @@ import com.j256.ormlite.table.TableUtils
 class DbHelper(context: Context) : OrmLiteSqliteOpenHelper(context,
         "atms.db",
         null,
-        1) {
+        2) {
 
     override fun onCreate(database: SQLiteDatabase?, connectionSource: ConnectionSource?) {
         TableUtils.createTable(connectionSource, Bank::class.java)
+        TableUtils.createTable(connectionSource, Atm::class.java)
         val sql = TableUtils.getCreateTableStatements<Bank, Long>(connectionSource, Bank::class.java)
         Log.d("TAG", "SQL:$sql")
 
@@ -25,8 +26,11 @@ class DbHelper(context: Context) : OrmLiteSqliteOpenHelper(context,
     }
 
     override fun onUpgrade(database: SQLiteDatabase?, connectionSource: ConnectionSource?, oldVersion: Int, newVersion: Int) {
+        Log.d("TAG", "Upgrade old:$oldVersion new:$newVersion")
         //drop
         TableUtils.dropTable<Bank, Long>(connectionSource, Bank::class.java, true)
+        TableUtils.dropTable<Atm, Long>(connectionSource, Atm::class.java, true)
+        onCreate(database, connectionSource)
     }
 
 

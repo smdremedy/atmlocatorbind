@@ -14,14 +14,15 @@ import com.google.android.gms.location.places.Place
 import com.google.android.gms.location.places.ui.PlacePicker
 import com.j256.ormlite.dao.Dao
 import com.soldiersofmobile.atmlocator.databinding.ActivityAddAtmBinding
-import com.soldiersofmobile.atmlocator.db.Bank
-import com.soldiersofmobile.atmlocator.db.BankDao
-import com.soldiersofmobile.atmlocator.db.DbHelper
+import com.soldiersofmobile.atmlocator.db.*
 
 class AddAtmActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityAddAtmBinding
     lateinit var adapter: ArrayAdapter<Bank>
+    lateinit var bankDao: BankDao
+    lateinit var atmDao: AtmDao
+
 
     private val model = AddAtmModel(ObservableDouble(0.0), ObservableDouble(0.0),
             ObservableField(""))
@@ -36,7 +37,8 @@ class AddAtmActivity : AppCompatActivity() {
         binding.adapter = adapter
 
         val dbHelper = DbHelper(this)
-        val bankDao: BankDao = dbHelper.getDao(Bank::class.java)
+        bankDao = dbHelper.getDao(Bank::class.java)
+        atmDao = dbHelper.getDao(Atm::class.java)
 
         adapter.addAll(bankDao.queryForAll())
 
@@ -67,6 +69,23 @@ class AddAtmActivity : AppCompatActivity() {
     companion object {
         val REQUEST_CODE = 1
     }
+
+    fun save() {
+        val bank = binding.bankSpinner.selectedItem as Bank
+
+        val atm: Atm = with(Atm()) {
+            this.bank = bank
+            address = model.address.get()
+            lat = model.lat.get()
+            lng = model.lng.get()
+            note = model.note
+            this
+        }
+        atmDao.create(atm)
+        finish()
+
+
+    }
 }
 
 fun Activity.toast(message: String) {
@@ -81,7 +100,9 @@ class AddAtmPresenter(val activity: AddAtmActivity, val model: AddAtmModel) {
     }
 
     fun save(view: View) {
-        activity.toast("Save clicked: $model")
+        //activity.toast("Save clicked: $model")
+        activity.save()
+
     }
 
     fun reset(view: View) {

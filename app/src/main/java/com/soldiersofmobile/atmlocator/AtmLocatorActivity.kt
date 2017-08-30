@@ -13,10 +13,14 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.soldiersofmobile.atmlocator.db.*
 
 class AtmLocatorActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private var mMap: GoogleMap? = null
+
+    lateinit var atmDao: AtmDao
+    lateinit var bankDao: BankDao
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,6 +28,9 @@ class AtmLocatorActivity : AppCompatActivity(), OnMapReadyCallback {
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
                 .findFragmentById(R.id.map) as SupportMapFragment
+        val dbHelper = DbHelper(this)
+        atmDao = dbHelper.getDao(Atm::class.java)
+        bankDao = dbHelper.getDao(Bank::class.java)
         mapFragment.getMapAsync(this)
     }
 
@@ -53,8 +60,17 @@ class AtmLocatorActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap = googleMap
 
         // Add a marker in Sydney and move the camera
-        val sydney = LatLng(-34.0, 151.0)
-        mMap!!.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-        mMap!!.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+
+        val atms: MutableList<Atm> = atmDao.queryForAll()
+        atms.forEach { atm ->
+
+            //bankDao.refresh(atm.bank)
+            val latLng = LatLng(atm.lat, atm.lng)
+            mMap!!.addMarker(MarkerOptions().position(latLng)
+                    .title(atm.bank.name))
+            mMap!!.moveCamera(CameraUpdateFactory.newLatLng(latLng))
+
+        }
+
     }
 }
